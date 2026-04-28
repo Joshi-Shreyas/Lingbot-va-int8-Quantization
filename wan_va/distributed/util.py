@@ -1,7 +1,7 @@
 # Copyright 2024-2025 The Alibaba Wan Team Authors. All rights reserved.
+import os
 import torch
 import torch.distributed as dist
-
 
 def _configure_model(model, shard_fn, param_dtype, device, eval_mode=True):
     """
@@ -11,18 +11,17 @@ def _configure_model(model, shard_fn, param_dtype, device, eval_mode=True):
         model.eval().requires_grad_(False)
     if dist.is_initialized():
         dist.barrier()
-
-    if dist.is_initialized():
+    # Skip FSDP sharding when quantization is enabled (incompatible)
+    quant_config = os.environ.get('QUANT_CONFIG', 'none')
+    if dist.is_initialized() and quant_config == 'none':
+        model.to(param_dtype)
         model = shard_fn(model)
     else:
         model.to(param_dtype)
         model.to(device)
-
     return model
 
-
 def init_distributed(world_size, local_rank, rank):
-    # if world_size > 1:
     torch.cuda.set_device(local_rank)
     dist.init_process_group(backend="nccl",
                             init_method="env://",

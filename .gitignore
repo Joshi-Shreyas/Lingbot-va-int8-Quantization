@@ -1,1 +1,10 @@
+train_out/
+__pycache__/
 *.pyc
+*.pyo
+.conda/
+.venv/
+*.pt
+*.pth
+*.ckpt
+*.safetensors

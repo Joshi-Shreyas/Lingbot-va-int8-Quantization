@@ -91,6 +91,12 @@ class VA_Server:
                                             device=self.device,
                                             eval_mode=True,
                                             )
+        # Apply quantization AFTER FSDP sharding
+        quant_config = os.environ.get('QUANT_CONFIG', 'none')
+        if quant_config != 'none':
+            sys.path.insert(0, '/home/joshi.shreyas/DLES/lingbot-va')
+            from quantize_model import apply_quantization
+            self.transformer = apply_quantization(self.transformer, quant_config)
 
         self.env_type = job_config.env_type
         self.streaming_vae_half = None
