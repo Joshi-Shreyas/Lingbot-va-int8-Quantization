@@ -104,4 +104,4 @@ Built on the LingBot-VA and RoboTwin 2.0 codebases. Compute provided by the Nort
 
 ## License
 
-For research use. See upstream LingBot-VA and RoboTwin licenses for base components.
+Licensed under the Apache License 2.0 — see [LICENSE](LICENSE) for details. Base components (LingBot-VA, RoboTwin 2.0) remain under their respective upstream licenses.
