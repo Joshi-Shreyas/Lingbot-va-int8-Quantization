@@ -13,7 +13,7 @@
 module purge
 module load anaconda3/2024.06 cuda/12.8.0
 eval "$(micromamba shell hook --shell bash)"
-micromamba activate /courses/EECE7398.202630/students/joshi.shreyas/lingbot
+micromamba activate /scratch/joshi.shreyas/lingbot_env/lingbot
 
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 python -c "from curobo.types.math import Pose; print('curobo ok')"

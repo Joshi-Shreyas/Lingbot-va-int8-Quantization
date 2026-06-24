@@ -1,10 +1,10 @@
 train_out/
-__pycache__/
-*.pyc
-*.pyo
-.conda/
-.venv/
-*.pt
+results/
+*.mp4
 *.pth
 *.ckpt
-*.safetensors
+__pycache__/
+*.pyc
+*.log
+*.out
+*.err

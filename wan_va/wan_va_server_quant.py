@@ -94,7 +94,7 @@ class VA_Server:
         # Apply quantization AFTER FSDP sharding
         quant_config = os.environ.get('QUANT_CONFIG', 'none')
         if quant_config != 'none':
-            sys.path.insert(0, '/home/joshi.shreyas/DLES/lingbot-va')
+            sys.path.insert(0, '/home/joshi.shreyas/DLES/lingbot-va-quant')
             from quantize_model import apply_quantization
             self.transformer = apply_quantization(self.transformer, quant_config)
 
@@ -448,6 +448,19 @@ class VA_Server:
 
     def _infer(self, obs, frame_st_id=0):
         import time
+        # Lazily encode prompt if not already done
+        if self.prompt_embeds is None and obs.get("prompt") is not None:
+            self.prompt_embeds, self.negative_prompt_embeds = self.encode_prompt(
+                prompt=obs["prompt"],
+                negative_prompt=None,
+                do_classifier_free_guidance=self.job_config.guidance_scale > 1,
+                num_videos_per_prompt=1,
+                prompt_embeds=None,
+                negative_prompt_embeds=None,
+                max_sequence_length=512,
+                device=self.device,
+                dtype=self.dtype,
+            )
         torch.cuda.reset_peak_memory_stats()
         _infer_start = time.perf_counter()
         frame_chunk_size = self.job_config.frame_chunk_size

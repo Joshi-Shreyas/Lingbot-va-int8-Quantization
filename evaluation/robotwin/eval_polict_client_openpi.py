@@ -392,7 +392,10 @@ def main(usr_args):
 
     seed = usr_args["seed"]
 
-    st_seed = 10000 * (1 + seed)
+    if usr_args.get("st_seed") is not None:
+        st_seed = usr_args["st_seed"]
+    else:
+        st_seed = 10000 * (1 + seed)
     suc_nums = []
     test_num = usr_args["test_num"]
 
@@ -654,6 +657,12 @@ def eval_policy(task_name,
             f"Success rate: \033[96m{TASK_ENV.suc}/{TASK_ENV.test_num}\033[0m => \033[95m{round(TASK_ENV.suc/TASK_ENV.test_num*100, 1)}%\033[0m, current seed: \033[90m{now_seed}\033[0m\n"
         )
         now_seed += 1
+        # Save checkpoint after each episode
+        import json, os
+        ckpt_dir = os.path.join(args["save_root"], f"stseed-{st_seed}", "metrics", task_name)
+        os.makedirs(ckpt_dir, exist_ok=True)
+        with open(os.path.join(ckpt_dir, "checkpoint.json"), "w") as f:
+            json.dump({"last_seed": now_seed, "succ_seed": succ_seed}, f)
 
     return now_seed, TASK_ENV.suc
 
@@ -667,6 +676,7 @@ def parse_args_and_config():
     parser.add_argument("--video_guidance_scale", type=float, default=5.0)
     parser.add_argument("--action_guidance_scale", type=float, default=5.0)
     parser.add_argument("--test_num", type=int, default=100)
+    parser.add_argument("--st_seed", type=int, default=None, help="Override starting seed for resuming runs")
     args = parser.parse_args()
 
     with open(args.config, "r", encoding="utf-8") as f:
