@@ -100,8 +100,7 @@ python -m evaluation.robotwin.eval_polict_client_openpi ... --st_seed <last_seed
 
 ## Acknowledgments
 
-Built on the LingBot-VA and RoboTwin 2.0 codebases. Compute provided by the Northeastern University Discovery cluster as well; as my Professor Yanzhi Wang for his ideas and support.
-
+Built on the LingBot-VA and RoboTwin 2.0 codebases. Compute provided by the Northeastern University Discovery cluster as well;
 ## License
 
 Licensed under the Apache License 2.0 — see [LICENSE](LICENSE) for details. Base components (LingBot-VA, RoboTwin 2.0) remain under their respective upstream licenses.
